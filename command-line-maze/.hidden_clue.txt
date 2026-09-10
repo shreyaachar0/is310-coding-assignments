@@ -1,0 +1,1 @@
+You found the hidden clue! Personal information can sometimes be exposed without a user's permission. Find the place where a data leak might happen.
