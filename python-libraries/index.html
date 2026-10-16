@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Data Collector</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff0f5;
+            color: #333;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #c94f7c;
+        }
+
+        h2 {
+            color: #a83f68;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px 0;
+            width: 250px;
+        }
+
+        button {
+            background-color: #d45d8c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+
+        button:hover {
+            background-color: #a83f68;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Movie Data Collector</h1>
+
+    <p>
+        Welcome! This website allows you to collect
+        information about your favorite movies.
+    </p>
+
+    <h2>Example Movies</h2>
+
+    <ul>
+        <li>Zootopia - Animation - 2016</li>
+        <li>The Devil Wears Prada - Comedy - 2006</li>
+        <li>How to Lose a Guy in 10 Days - Romance - 2003</li>
+    </ul>
+
+    <h2>Add Your Own Movie</h2>
+
+    <label for="movieTitle">Movie Title:</label>
+    <br>
+    <input type="text" id="movieTitle" required>
+    <br><br>
+
+    <label for="genre">Genre:</label>
+    <br>
+    <input type="text" id="genre" required>
+    <br><br>
+
+    <label for="releaseYear">Release Year:</label>
+    <br>
+    <input type="number" id="releaseYear" min="1888" required>
+    <br><br>
+
+    <button onclick="addMovie()">Add Movie</button>
+
+    <h2>Movies You Added</h2>
+
+    <ul id="movieList"></ul>
+
+    <button onclick="downloadCSV()">Download CSV File</button>
+
+    <script>
+        let movies = [];
+
+        function addMovie() {
+            let title = document.getElementById("movieTitle").value.trim();
+            let genre = document.getElementById("genre").value.trim();
+            let year = document.getElementById("releaseYear").value.trim();
+
+            // Check that all fields are filled out
+            if (title === "" || genre === "" || year === "") {
+                alert("Please fill out all fields!");
+                return;
+            }
+
+            // Check that the release year is valid
+            if (!Number.isInteger(Number(year)) || Number(year) < 1888) {
+                alert("Please enter a valid release year.");
+                return;
+            }
+
+            // Ask the user to confirm the information
+            let confirmMovie = confirm(
+                "Is this movie information correct?\n\n" +
+                "Movie Title: " + title + "\n" +
+                "Genre: " + genre + "\n" +
+                "Release Year: " + year
+            );
+
+            if (!confirmMovie) {
+                alert("Please correct your movie information.");
+                return;
+            }
+
+            // Save the confirmed movie
+            let movie = {
+                title: title,
+                genre: genre,
+                year: year
+            };
+
+            movies.push(movie);
+
+            // Display the movie on the webpage
+            let movieList = document.getElementById("movieList");
+            let listItem = document.createElement("li");
+
+            listItem.textContent = title + " - " + genre + " - " + year;
+            movieList.appendChild(listItem);
+
+            // Clear the input fields
+            document.getElementById("movieTitle").value = "";
+            document.getElementById("genre").value = "";
+            document.getElementById("releaseYear").value = "";
+
+            alert("Movie added successfully!");
+        }
+
+        function downloadCSV() {
+            if (movies.length === 0) {
+                alert("Please add at least one movie before downloading.");
+                return;
+            }
+
+            // Escape CSV values so commas and quotes work correctly
+            function escapeCSV(value) {
+                return '"' + String(value).replace(/"/g, '""') + '"';
+            }
+
+            let csvContent = "Movie Title,Genre,Release Year\n";
+
+            movies.forEach(function(movie) {
+                csvContent += [
+                    movie.title,
+                    movie.genre,
+                    movie.year
+                ].map(escapeCSV).join(",") + "\n";
+            });
+
+            // Create the CSV file
+            let blob = new Blob([csvContent], {
+                type: "text/csv;charset=utf-8;"
+            });
+
+            let url = URL.createObjectURL(blob);
+            let link = document.createElement("a");
+
+            link.href = url;
+            link.download = "movie_data.csv";
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+</html>

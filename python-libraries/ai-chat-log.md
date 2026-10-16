@@ -1,0 +1,2 @@
+I mainly used ChatGPT to help me troubleshoot errors while working on my Python and HTML programs. An issue I ran into was a Python indentation error that said break outside loop. ChatGPT helped me understand why the error was happening and how to fix the spacing in my code.
+Another issue was with my HTML file. When I opened it in my browser, it displayed the code instead of the actual webpage. ChatGPT helped me figure out that the file was saved as index.txt instead of index.html and showed me how to rename it.
